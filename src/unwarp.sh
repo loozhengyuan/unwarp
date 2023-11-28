@@ -58,7 +58,7 @@ while getopts ':s:vh' opt; do
 done
 shift "$((OPTIND - 1))"
 
-if [[ ! -x "${warp_bin}" ]]; then
+if ! command -v "${warp_bin}" &> /dev/null; then
     printf 'error: command %s is not found. ensure it is installed, executable, and added to PATH\n' "${warp_bin}" >&2
     exit 1
 fi
