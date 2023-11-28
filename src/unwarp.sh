@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+script_dir="$(dirname "${BASH_SOURCE[0]}")"
+script_name="$(basename "${BASH_SOURCE[0]}")"
+version='v0.1.0'
+
+warp_bin='warp-cli'
+delay_secs=1
+
+function usage() {
+    cat <<EOF
+Usage: ${script_name} [-s] [-v] [-h]
+
+Disables Cloudflare WARP client.
+
+Options:
+    -s      interval to trigger the disconnect
+            command, in secs. (default: ${delay_secs})
+    -v      displays the build version.
+    -h      displays this help message.
+EOF
+}
+
+function version() {
+    printf "%s %s\n" "${script_name}" "${version}"
+}
+
+# Parse optional flags
+# NOTE: We use the preceeding colon to explicitly handle error messages
+while getopts ':s:vh' opt; do
+    case "${opt}" in
+    s)
+        delay_secs="${OPTARG}"
+        ;;
+    v)
+        version
+        exit 0
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    \?)
+        err "-${OPTARG} is not a recognised option"
+        usage
+        exit 1
+        ;;
+    :)
+        err "-${OPTARG} option requires a value"
+        usage
+        exit 1
+        ;;
+    esac
+done
+shift "$((OPTIND - 1))"
+
+if [[ ! -x "${warp_bin}" ]]; then
+    printf 'error: command %s is not found. ensure it is installed, executable, and added to PATH\n' "${warp_bin}" >&2
+    exit 1
+fi
+
+while true; do
+    "${warp_bin}" disconnect
+    sleep "${delay_secs}"
+done
