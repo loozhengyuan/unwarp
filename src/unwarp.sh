@@ -64,6 +64,6 @@ if ! command -v "${warp_bin}" &> /dev/null; then
 fi
 
 while true; do
-    "${warp_bin}" disconnect
+    "${warp_bin}" disconnect > /dev/null
     sleep "${delay_secs}"
 done
