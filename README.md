@@ -7,7 +7,8 @@ Disable [Cloudflare WARP](https://developers.cloudflare.com/cloudflare-one/conne
 To install `unwarp`, run the following command:
 
 ```shell
-brew install loozhengyuan/tap/unwarp
+brew tap loozhengyuan/tap
+brew install unwarp
 ```
 
 Once installed, you need to enable the `unwarp` service to complete installation:
