@@ -26,7 +26,7 @@ You can verify that it is installed correctly by enabling [Cloudflare WARP](http
 When you need to be connected to Cloudflare WARP, you can temporarily disable `unwarp` by running:
 
 ```shell
-brew services kill unwarp
+brew services stop unwarp
 ```
 
 Once you are done, you can restart the service by running:
