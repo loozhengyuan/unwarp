@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-script_dir="$(dirname "${BASH_SOURCE[0]}")"
+# script_dir="$(dirname "${BASH_SOURCE[0]}")"
 script_name="$(basename "${BASH_SOURCE[0]}")"
 version='v0.1.0'
 
@@ -58,12 +58,12 @@ while getopts ':s:vh' opt; do
 done
 shift "$((OPTIND - 1))"
 
-if ! command -v "${warp_bin}" &> /dev/null; then
+if ! command -v "${warp_bin}" &>/dev/null; then
     printf 'error: command %s is not found. ensure it is installed, executable, and added to PATH\n' "${warp_bin}" >&2
     exit 1
 fi
 
 while true; do
-    "${warp_bin}" disconnect > /dev/null
+    "${warp_bin}" disconnect >/dev/null
     sleep "${delay_secs}"
 done
