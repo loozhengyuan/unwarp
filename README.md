@@ -1,5 +1,7 @@
 # `unwarp`
 
+[![ci](https://github.com/loozhengyuan/unwarp/actions/workflows/ci.yml/badge.svg)](https://github.com/loozhengyuan/unwarp/actions/workflows/ci.yml)
+
 Disable [Cloudflare WARP](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/) on macOS
 
 ## Install
