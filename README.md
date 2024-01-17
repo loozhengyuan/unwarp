@@ -4,6 +4,8 @@
 
 Disable [Cloudflare WARP](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/) on macOS
 
+The `unwarp` tool works by invoking the `warp-cli disconnect` command on a fixed interval in the background, forcing Cloudflare WARP to disconnect when it is in connecting or connected state. This is the most compliant approach because it does not alter the changes made by any MDM policies.
+
 ## Install
 
 To install `unwarp`, run the following command:
