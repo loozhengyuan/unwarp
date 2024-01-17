@@ -8,8 +8,8 @@ set -o pipefail
 script_name="$(basename "${BASH_SOURCE[0]}")"
 version='v0.1.0'
 
-warp_bin='warp-cli'
-delay_secs=1
+warp_bin="${UNWARP_WARP_BIN:-warp-cli}"
+delay_secs="${UNWARP_DELAY_SECS:-1}"
 
 function usage() {
     cat <<EOF
