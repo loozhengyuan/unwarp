@@ -13,11 +13,13 @@ delay_secs=1
 
 function usage() {
     cat <<EOF
-Usage: ${script_name} [-s] [-v] [-h]
+Usage: ${script_name} [-b] [-s] [-v] [-h]
 
 Disables Cloudflare WARP client.
 
 Options:
+    -b      custom binary path for the \`warp-cli\`
+            utility. (default: ${warp_bin})
     -s      interval to trigger the disconnect
             command, in secs. (default: ${delay_secs})
     -v      displays the build version.
@@ -31,8 +33,11 @@ function version() {
 
 # Parse optional flags
 # NOTE: We use the preceeding colon to explicitly handle error messages
-while getopts ':s:vh' opt; do
+while getopts ':b:s:vh' opt; do
     case "${opt}" in
+    b)
+        warp_bin="${OPTARG}"
+        ;;
     s)
         delay_secs="${OPTARG}"
         ;;
