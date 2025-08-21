@@ -58,6 +58,8 @@ rulesets:
             # NOTE: The Integration ID for GitHub Actions is `15368`
             - integration_id: 15368
               context: lint
+            - integration_id: 15368
+              context: release
   # NOTE: Copilot/Jules are not able to push signed commits yet
   # so we need repository admins to be able bypass this
   # restriction for PRs.

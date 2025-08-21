@@ -9,6 +9,22 @@ on:
     branches:
       - main
       - releases/**
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Release
+        type: boolean
+        required: true
+        default: false
+      release_type:
+        description: Release Type
+        type: choice
+        required: true
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
 
 defaults:
   run:
@@ -41,3 +57,41 @@ jobs:
       - name: Run shfmt
         run: |
           shfmt -l -d -i 4 **/*.sh
+
+  release:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    needs:
+      - lint
+    permissions:
+      contents: write # NOTE: Required to create GitHub releases
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0 # NOTE: Required to fetch ALL tags
+
+      - name: Determine current and next tags
+        id: tags
+        run: |
+          curr="$(git tag --list | sed 's/^v//' | awk '/^[0-9]+\.[0-9]+\.[0-9]+$/' | sort --version-sort | tail -n 1)"
+          next="$(npx --yes semver --increment '${{ inputs.release_type }}' "${curr:-0.0.0}")"
+
+          printf "CURRENT:\t${curr}\n"
+          printf "NEXT:\t\t${next}\n"
+
+          echo "curr=${curr}" >> "$GITHUB_OUTPUT"
+          echo "next=${next}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify next version tag
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.release
+        run: |
+          [ "$(awk -F"'" '/^version=/ { print $2 }' src/unwarp.sh)" = 'v${{ steps.tags.outputs.next }}' ]
+
+      - name: Create release
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.tags.outputs.next }}" --generate-notes --fail-on-no-commits
