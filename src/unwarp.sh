@@ -6,7 +6,7 @@ set -o pipefail
 
 # script_dir="$(dirname "${BASH_SOURCE[0]}")"
 script_name="$(basename "${BASH_SOURCE[0]}")"
-version='v0.1.0'
+version='v0.2.0'
 
 warp_bin="${UNWARP_WARP_BIN:-warp-cli}"
 delay_secs="${UNWARP_DELAY_SECS:-1}"
