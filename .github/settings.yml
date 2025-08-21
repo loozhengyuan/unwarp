@@ -1,0 +1,77 @@
+# Configuration for GitHub Repository Settings App
+# https://github.com/repository-settings/app
+
+repository:
+  # Disable unused features
+  has_discussions: false
+  has_projects: false
+  has_wiki: false
+  has_downloads: false
+
+  # Enforce squash commit only
+  allow_merge_commit: false
+  allow_squash_merge: true
+  allow_rebase_merge: false
+  squash_merge_commit_title: PR_TITLE
+  squash_merge_commit_message: PR_BODY
+
+  # Allow auto-merge workflows (e.g. Dependabot)
+  allow_auto_merge: true
+
+  # Ensure merged branches are deleted
+  delete_branch_on_merge: true
+
+  # Enable vulnerability alerts and fixes
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+
+rulesets:
+  - name: baseline
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
+    rules:
+      - type: deletion # Block branch deletion
+      - type: non_fast_forward # Block force-push
+      - type: required_linear_history
+  - name: require-status-checks
+    target: branch
+    enforcement: active
+    bypass_actors:
+      - actor_id: 5
+        actor_type: RepositoryRole
+        bypass_mode: always
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
+    rules:
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: false
+          required_status_checks:
+            # NOTE: The Integration ID for GitHub Actions is `15368`
+            - integration_id: 15368
+              context: lint
+  # NOTE: Copilot/Jules are not able to push signed commits yet
+  # so we need repository admins to be able bypass this
+  # restriction for PRs.
+  - name: require-signed-commits
+    target: branch
+    enforcement: active
+    bypass_actors:
+      - actor_id: 5
+        actor_type: RepositoryRole
+        bypass_mode: pull_request
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
+    rules:
+      - type: required_signatures
