@@ -36,7 +36,7 @@ defaults:
 jobs:
   lint:
     name: lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
 
     steps:
@@ -59,7 +59,7 @@ jobs:
           shfmt -l -d -i 4 **/*.sh
 
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     needs:
       - lint
