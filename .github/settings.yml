@@ -12,8 +12,8 @@ repository:
   allow_merge_commit: false
   allow_squash_merge: true
   allow_rebase_merge: false
-  squash_merge_commit_title: PR_TITLE
-  squash_merge_commit_message: PR_BODY
+  squash_merge_commit_title: COMMIT_OR_PR_TITLE
+  squash_merge_commit_message: COMMIT_MESSAGES
 
   # Allow auto-merge workflows (e.g. Dependabot)
   allow_auto_merge: true
@@ -37,6 +37,7 @@ rulesets:
     rules:
       - type: deletion # Block branch deletion
       - type: non_fast_forward # Block force-push
+      - type: required_linear_history
   # NOTE: Copilot/Jules are not able to push signed commits yet
   # so we need repository admins to be able bypass this
   # restriction for PRs.
