@@ -37,7 +37,23 @@ rulesets:
     rules:
       - type: deletion # Block branch deletion
       - type: non_fast_forward # Block force-push
-      - type: required_linear_history
+  # NOTE: Copilot/Jules are not able to push signed commits yet
+  # so we need repository admins to be able bypass this
+  # restriction for PRs.
+  - name: require-signed-commits
+    target: branch
+    enforcement: active
+    bypass_actors:
+      - actor_id: 5
+        actor_type: RepositoryRole
+        bypass_mode: pull_request
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
+    rules:
+      - type: required_signatures
   - name: require-status-checks
     target: branch
     enforcement: active
@@ -60,20 +76,3 @@ rulesets:
               context: lint
             - integration_id: 15368
               context: release
-  # NOTE: Copilot/Jules are not able to push signed commits yet
-  # so we need repository admins to be able bypass this
-  # restriction for PRs.
-  - name: require-signed-commits
-    target: branch
-    enforcement: active
-    bypass_actors:
-      - actor_id: 5
-        actor_type: RepositoryRole
-        bypass_mode: pull_request
-    conditions:
-      ref_name:
-        include:
-          - "~DEFAULT_BRANCH"
-        exclude: []
-    rules:
-      - type: required_signatures
