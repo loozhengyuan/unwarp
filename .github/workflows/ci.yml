@@ -45,6 +45,10 @@ jobs:
 
       - name: Set up Go
         uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+        with:
+          # NOTE: Use the latest stable Go so that `shfmt@latest` (which
+          # tracks recent Go releases) can always be installed.
+          go-version: stable
 
       - name: Install dependencies
         run: |
